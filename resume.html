@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body id="body">
+<div class="main">
+  <div class="left">
+
+
+  </div>
+  <div class="right">
+
+  </div>
+
+</div>
+  </body>
+
+</html>
+<script type="text/javascript">
+  let url=window.location.search;
+let length=url.length;
+let profileName=url.slice(1,length);
+
+  console.log(profileName);
+  var indexedDB = window.indexedDB || window.mozIndexedDB || window.msIndexedDB || window.webkitIndexedDB;
+  var store;
+  var open;
+  // var result;
+  var tx;
+     var request = indexedDB.open("database",1);
+     request.onupgradeneeded = function(e){
+     open = e.target.result;
+     store = open.createObjectStore("resumedata",{keyPath:"name"});
+     console.log("upgrade success");
+
+  }
+  request.onerror = function(e){
+  	console.log("error"+e);
+
+     }
+
+  request.onsuccess=function(e){
+  	open = e.target.result;
+    tx =open.transaction("resumedata",'readwrite');
+    store = tx.objectStore("resumedata");
+    var info=store.get(profileName);
+  	info.onsuccess=function(data){
+  		console.log(data.target.result);
+  		display(data.target.result);
+  	}
+
+  	 }
+     var right=document.querySelector(".right");
+
+     var left=document.querySelector(".left");
+   	function display(d){
+      console.log(d.name);
+      var image=document.createElement("img");
+      image.src="./image1.png";
+      left.append(image);
+      var nh2=document.createElement("h2");
+      nh2.textContent=d.name;
+      left.append(nh2);
+      var eh3=document.createElement("h3");
+      eh3.textContent=d.email;
+      left.append(eh3);
+      var ph3=document.createElement("h3");
+      ph3.textContent=d.mobile;
+      left.append(ph3);
+
+      var ch1=document.createElement("h1");
+      ch1.textContent="resume";
+      right.append(ch1);
+
+      var ch2=document.createElement("h2");
+      ch2.textContent="career Objective";
+        right.append(ch2);
+        var hr1=document.createElement("hr");
+        right.append(hr1);
+  var cp=document.createElement("p");
+  cp.textContent=d.career;
+  right.append(cp);
+  var ch3=document.createElement("h2");
+  ch3.textContent="Educational Details";
+  right.append(ch3);
+
+
+  for(var i in d.education){
+
+    var ch4=document.createElement("h4");
+    ch4.textContent=d.education[i].degree;
+
+    right.append(ch4);
+      var ul=document.createElement("ul");
+    var li=document.createElement("li");
+    li.textContent=d.education[i].inst;
+    ul.append(li);
+    var li1=document.createElement("li");
+    li1.textContent=d.education[i].per;
+    ul.append(li1);
+    var li2=document.createElement("li");
+    li2.textContent=d.education[i].year;
+    ul.append(li2);
+    ch4.append(ul);
+
+    // var inst=document.createElement("li")
+
+  }
+
+
+
+
+   	}
+
+</script>
